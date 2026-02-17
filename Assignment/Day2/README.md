@@ -14,3 +14,43 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Stock Market Dashboard
+
+A simple React + Vite app that displays dummy stock market data in a side-by-side card layout with sorting.
+
+
+## Features
+
+Displays OHLCV stock data
+
+Side-by-side stock cards
+
+Sort by date, price, and volume
+
+Built using React Hooks
+
+Inline styling only
+
+
+## Tech Stack
+
+React
+
+Vite
+
+JavaScript
+
+JSX
+
+
+Run Locally
+npm install
+npm run dev
+
+
+Open 👉 http://localhost:5173/
+
+## Note
+
+This project uses dummy stock data for learning and practice.
