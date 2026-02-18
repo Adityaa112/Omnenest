@@ -5,11 +5,17 @@ import Portfolio from './Portfolio';
 import { products } from './products';
 import ProductCard from './ProductCard';
 import SortAndFilter from '../sortAndFilter/SortAndFilter';
+import Filter from '../sortAndFilter/filter';
+import { useCategoryFilter } from '../sortAndFilter/FilterLogic';
 import { getSortedProducts } from '../sortAndFilter/SortAndFilterLogic';
+import InStockOutStock from '../sortAndFilter/InStockOutStock';
+import { useInStockOutStock } from '../sortAndFilter/InStockOutStockLogic';
 
 function Dashboard() {
   const [showPortfolio, setShowPortfolio] = useState(false);
   const [sortBy, setSortBy] = useState('default');
+  const { selectedCategory, setSelectedCategory, categories } = useCategoryFilter();
+  const { showOutOfStock, setShowOutOfStock } = useInStockOutStock(products);
 
   const userData = {
     profilePic: '/src/assets/profile.png',
@@ -30,6 +36,13 @@ function Dashboard() {
     );
   }
 
+  // Filter products by selected category and stock status
+  let filteredProducts = selectedCategory === 'all'
+    ? products
+    : products.filter(product => product.category === selectedCategory);
+  if (!showOutOfStock) {
+    filteredProducts = filteredProducts.filter(product => product.inStock !== false);
+  }
 
   return (
     <div>
@@ -41,11 +54,24 @@ function Dashboard() {
         <p>Age: {userData.age}</p>
         <p>Value: {userData.value}</p>
         <div style={{ padding: '20px' }}>
-          <h1>E-commerce Product Catalog</h1>
+          
         </div>
         <button onClick={() => setShowPortfolio(true)}>Portfolio</button>
       </div>
+      <h1>E-commerce Product Catalog</h1>
+      {/* Category Filter */}
+      <Filter
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        categories={categories}
+      />
+      {/* <h1>E-commerce Product Catalog</h1> */}
       <SortAndFilter sortBy={sortBy} setSortBy={setSortBy} />
+      {/* In Stock / Out of Stock Filter */}
+      <InStockOutStock
+        showOutOfStock={showOutOfStock}
+        setShowOutOfStock={setShowOutOfStock}
+      />
       {/* Product Grid */}
       <div style={{
         display: 'grid',
@@ -53,7 +79,7 @@ function Dashboard() {
         gap: '20px',
         marginTop: '20px'
       }}>
-        {getSortedProducts(products, sortBy).map((product) => (
+        {getSortedProducts(filteredProducts, sortBy).map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>

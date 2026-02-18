@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 function SortAndFilter({ sortBy, setSortBy }) {
     return (
         <div style={{ padding: '20px' }}>
-            <h1>E-commerce Product Catalog</h1>
+            {/* <h1>E-commerce Product Catalog</h1> */}
 
             {/* Sort Controls */}
             <div style={{

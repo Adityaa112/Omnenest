@@ -12,6 +12,8 @@ export const products = [
     id: 2,
     name: 'Running Shoes',
     category: 'Fashion',
+
+    
     price: 3499,
     rating: 4.2,
     inStock: true,
