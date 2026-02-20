@@ -2,19 +2,34 @@ import { useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
 import SearchBar from './SearchBar';
 import { useProductSearch } from '../hooks/useProductSearch';
-import { useWishlist } from '../hooks/useWishlist'; 
+import { useWishlist } from '../hooks/useWishlist';
+import { useWindowSize } from '../hooks/useWindowSize';
+
 function ProductList({ onViewDetails }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Logic from Feature 1
+  const { width } = useWindowSize();
   const { searchTerm, setSearchTerm, filteredProducts, isSearching } = useProductSearch(products);
-  
-  // Feature 2: Wishlist Logic
   const { toggleWishlist, isInWishlist } = useWishlist();
+
+
+
+
+  let gridColumns;
+  if (width < 480) {
+    gridColumns = '1fr';                
+  } else if (width < 768) {
+    gridColumns = 'repeat(2, 1fr)';     
+  } else if (width < 1024) {
+    gridColumns = 'repeat(3, 1fr)';     
+  } else {
+    gridColumns = 'repeat(auto-fill, minmax(260px, 1fr))';
+  }
+
+
 
   useEffect(() => {
     fetch('https://fakestoreapi.com/products/categories')
@@ -27,15 +42,11 @@ function ProductList({ onViewDetails }) {
     const url = selectedCategory === 'all'
       ? 'https://fakestoreapi.com/products'
       : `https://fakestoreapi.com/products/category/${selectedCategory}`;
-    
+
     fetch(url)
       .then(res => res.json())
       .then(data => {
         setProducts(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        setError(err.message);
         setLoading(false);
       });
   }, [selectedCategory]);
@@ -52,31 +63,29 @@ function ProductList({ onViewDetails }) {
         isSearching={isSearching}
       />
 
+      {/* Category Buttons */}
       <div style={{ display: 'flex', gap: '12px', marginBottom: '30px', flexWrap: 'wrap' }}>
-        <button
-          onClick={() => setSelectedCategory('all')}
-          style={getBtnStyle(selectedCategory === 'all')}
-        >
+        <button onClick={() => setSelectedCategory('all')} style={getBtnStyle(selectedCategory === 'all')}>
           All Products
         </button>
         {categories.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            style={getBtnStyle(selectedCategory === cat)}
-          >
+          <button key={cat} onClick={() => setSelectedCategory(cat)} style={getBtnStyle(selectedCategory === cat)}>
             {cat}
           </button>
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '24px' }}>
+      {/* 4. APPLY DYNAMIC GRID COLUMNS */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: gridColumns, // Uses our calculated variable
+        gap: '24px'
+      }}>
         {filteredProducts.map(product => (
-          <ProductCard 
-            key={product.id} 
-            product={product} 
+          <ProductCard
+            key={product.id}
+            product={product}
             onViewDetails={onViewDetails}
-            // Passing wishlist props down to individual cards
             isFavorite={isInWishlist(product.id)}
             onToggleWishlist={() => toggleWishlist(product.id)}
           />

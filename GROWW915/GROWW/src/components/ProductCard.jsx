@@ -48,14 +48,17 @@ function ProductCard({ product, onViewDetails, isFavorite, onToggleWishlist }) {
       />
 
       {/* 🏷 Title */}
-      <h3 style={{
-        fontSize: '14px',
-        margin: '0 0 10px 0',
-        height: '40px',
-        overflow: 'hidden'
-      }}>
-        {product.title}
-      </h3>
+        <h3 style={{
+          fontSize: '14px',
+          margin: '0 0 10px 0',
+          wordBreak: 'break-word',
+          whiteSpace: 'normal',
+          minHeight: '40px',
+          lineHeight: '1.2',
+          // Remove fixed height and overflow
+        }}>
+          {product.title}
+        </h3>
 
       {/* ⭐ Rating */}
       <div style={{ marginBottom: '10px' }}>
@@ -80,7 +83,7 @@ function ProductCard({ product, onViewDetails, isFavorite, onToggleWishlist }) {
       {/* 🔽 Toggle Button */}
       <button
         onClick={(e) => {
-          e.stopPropagation(); // ⛔ prevent card click
+          e.stopPropagation(); 
           toggleDesc();
         }}
         style={{
@@ -98,13 +101,16 @@ function ProductCard({ product, onViewDetails, isFavorite, onToggleWishlist }) {
 
       {/* 📄 Description */}
       {showDesc && (
-        <p style={{
-          marginTop: '8px',
+        <div style={{
+          marginTop: '10px',
           fontSize: '13px',
-          color: '#555'
+          color: '#333',
+          wordBreak: 'break-word',
+          whiteSpace: 'normal',
+          lineHeight: '1.4',
         }}>
           {product.description}
-        </p>
+        </div>
       )}
     </div>
   );
