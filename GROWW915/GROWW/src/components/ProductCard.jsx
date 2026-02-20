@@ -1,8 +1,11 @@
 // src/components/ProductCard.jsx
 import React from 'react';
-import WishlistButton from './WishlistButton'; // Ensure this exists in components folder
+import WishlistButton from './WishlistButton';
+import { useToggle } from '../hooks/useToggle';
 
 function ProductCard({ product, onViewDetails, isFavorite, onToggleWishlist }) {
+  const [showDesc, toggleDesc] = useToggle(false);
+
   return (
     <div 
       style={{
@@ -11,7 +14,7 @@ function ProductCard({ product, onViewDetails, isFavorite, onToggleWishlist }) {
         padding: '15px',
         background: 'white',
         cursor: 'pointer',
-        position: 'relative', // Added: Needed to position the heart icon
+        position: 'relative',
         transition: 'transform 0.2s, box-shadow 0.2s'
       }}
       onMouseOver={(e) => {
@@ -24,7 +27,7 @@ function ProductCard({ product, onViewDetails, isFavorite, onToggleWishlist }) {
       }}
       onClick={() => onViewDetails(product.id)}
     >
-      {/* Feature 2 UI: The Heart Toggle */}
+      {/* ❤️ Wishlist Button */}
       <div style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 10 }}>
         <WishlistButton 
           isFavorite={isFavorite} 
@@ -32,6 +35,7 @@ function ProductCard({ product, onViewDetails, isFavorite, onToggleWishlist }) {
         />
       </div>
 
+      {/* 🖼 Product Image */}
       <img
         src={product.image}
         alt={product.title}
@@ -42,7 +46,8 @@ function ProductCard({ product, onViewDetails, isFavorite, onToggleWishlist }) {
           marginBottom: '10px'
         }}
       />
-      
+
+      {/* 🏷 Title */}
       <h3 style={{
         fontSize: '14px',
         margin: '0 0 10px 0',
@@ -51,7 +56,8 @@ function ProductCard({ product, onViewDetails, isFavorite, onToggleWishlist }) {
       }}>
         {product.title}
       </h3>
-      
+
+      {/* ⭐ Rating */}
       <div style={{ marginBottom: '10px' }}>
         <span style={{ color: '#ff9900' }}>
           {'★'.repeat(Math.floor(product.rating.rate))}
@@ -60,7 +66,8 @@ function ProductCard({ product, onViewDetails, isFavorite, onToggleWishlist }) {
           ({product.rating.count})
         </span>
       </div>
-      
+
+      {/* 💰 Price */}
       <p style={{
         fontSize: '20px',
         fontWeight: 'bold',
@@ -69,6 +76,36 @@ function ProductCard({ product, onViewDetails, isFavorite, onToggleWishlist }) {
       }}>
         ${product.price}
       </p>
+
+      {/* 🔽 Toggle Button */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation(); // ⛔ prevent card click
+          toggleDesc();
+        }}
+        style={{
+          marginTop: '10px',
+          background: 'none',
+          border: 'none',
+          color: '#0066cc',
+          cursor: 'pointer',
+          padding: 0,
+          fontSize: '13px'
+        }}
+      >
+        {showDesc ? '▲ Hide Description' : '▼ Show Description'}
+      </button>
+
+      {/* 📄 Description */}
+      {showDesc && (
+        <p style={{
+          marginTop: '8px',
+          fontSize: '13px',
+          color: '#555'
+        }}>
+          {product.description}
+        </p>
+      )}
     </div>
   );
 }
